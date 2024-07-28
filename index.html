@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<canvas id="canvas1" height="400" width="400" style="border: 2px solid black" onclick="clicked()"></canvas>
+<script>
+    //"FRONTEND"--"FRONTEND"--"FRONTEND"--"FRONTEND"--"FRONTEND"--"FRONTEND"
+    //creating canvas
+    var c = document.getElementById("canvas");
+    var ctx = c.getContext("2d");
+    var boardsize = 8;
+    //defines the color the player plays
+    var color = "w"
+    //setting canvas size
+    c.width = 400;
+    c.height = 400;
+    //in this array has two lists, the first defines thefield where we want to move from and then the field where we want to go, if no fields are selected, its 0
+    const currentMove = [];
+    //if canvas gets clicked we do the click function
+    function clicked() {
+        click()
+    }
+    //function noting where mouse is and setting mx ans my to the mouse coordinates
+    window.addEventListener('mousemove', function (e) {
+        mx = e.x;
+        my = e.y;
+    })
+    //what happens when user clicks
+    function click() {
+        //turns mouse coordinates into fields on board
+        mx = (mx - mx % fieldsize) / fieldsize;
+        my = (my - my % fieldsize) / fieldsize;
+        //if a field was clicked before then currentMove[2] is not equal to 0 and we set the clicked field as the second location in the list and submit the move
+        if (currentMove[2] == 0) {
+            currentMove[1] = [mx, my]
+            clientPost(currentMove);
+            //after submitting the move we set current Move back to 0, so you can play your next move
+            currentMove[2] = 1
+            //if no field was clicked before the clicked field is getting the first field and currentMove[2] is set to 1 so next click the programm sets the next click as the second field
+        } else {
+            if (board[mx][my] != 0) {
+                currentMove[0] = [mx, my]
+                currentMove[2] = 0
+            }
+        }
+    }
+
+    //arrow where fields are lested [x][y],0=nothing, 1=pawn, 2=knight, 3=bishop,5=rook, 9=queen, 10=King
+    const board = [];
+    //generating an empty chessboard
+    for (let x = 0; x < boardsize; x++) {
+        const xy = []
+        for (let y = 0; y < boardsize; y++) {
+            xy[y] = 0;
+        }
+        board[x] = xy
+    }
+    //calculating the size of each field on the board in px
+    var fieldsize = c.height / boardsize;
+    //function that draws the field
+    function gmupdt() {
+        for (let x = 0; x < boardsize; x++) {
+            for (let y = 0; y < boardsize; y++) {
+                //makes normal fields black or white
+                if ((x + y) % 2 != 0) {
+                    ctx.fillStyle = "#AAAAAA";
+                } else {
+                    ctx.fillStyle = "#111111";
+                }
+                //makes pawns pink
+                if (board[x][y] == 1) {
+                    ctx.fillStyle = "#FF6666"
+                }
+                //makes knight green
+                if (board[x][y] == 2) {
+                    ctx.fillStyle = "#22DD22"
+                }
+                //makes bishops blue
+                if (board[x][y] == 3) {
+                    ctx.fillStyle = "#2222DD"
+                }
+                //makes rooks red
+                if (board[x][y] == 5) {
+                    ctx.fillStyle = "#DD2222"
+                }
+
+                //makes queen purple
+                if (board[x][y] == 9) {
+                    ctx.fillStyle = "#f803fc"
+                }
+
+                //makes king yellow
+                if (board[x][y] == 10) {
+                    ctx.fillStyle = "#DDDD22"
+                }
+
+
+                ctx.fillRect(fieldsize * x, fieldsize * y, fieldsize, fieldsize);
+
+            }
+        }
+    }
+    function serverPost(clmove) {
+        //after getting told the legal moves by the server we play them on our local bord
+        board[clmove[1][0]][clmove[1][1]] = board[clmove[0][0]][clmove[0][1]]
+        board[clmove[0][0]][clmove[0][1]] = 0
+        gmupdt()
+    }
+    //backend
+    const backendboard = board
+    //clmove = clientmove
+    //that function detects when the frontend sends a move to the backend
+    function clientPost(clmove) {
+        const move = clmove
+        //lets say the board is saved on the server from the view of white
+        //that means if we play black we have to "flip our move by 180"
+        if (color == "b") {
+            //now were basically subtracting the coordinates of the fields from 7 flipping them around the center of the board
+            for (let x = 0; a < 1; a++) {
+                for (let y = 0; y < 1; y++) {
+                    move[x][y] = 7 - move[x][y]
+                }
+            }
+        }
+        //now we have to check whether the move is possible
+        //so first we figure out what kind of piece needs to be moved
+        if (backendboard[move[0][0]][move[0][1]] == 1) {
+            //if true that means that the clicked piece is a pawn
+            if (move[0][0] == move[1][0]) {
+                //if true that means that the two selected fields have the same x-coordinate, which is essential for a legal pawn move
+                if (move[0][1] - 1 == move[1][1] || (move[0][1] == 6 && move[0][1] - 2 == move[1][1])) {
+                    //this one checks how many moves to the front the pawn makes. if 1 or 2 in the first move it lets the move be played
+                    //now we change the board data in the backend and the frontend
+                    serverPost(clmove);
+                    backendboard[move[0][0]][move[0][1]] = 0
+                    backendboard[move[1][0]][move[1][1]] = 1
+                }
+            }
+        }
+        //now we do the same for the knight
+        if (backendboard[move[0][0]][move[0][1]] == 2) {
+            if (((move[0][0] == move[1][0] - 1 || move[0][0] == move[1][0] + 1) && (move[0][1] == move[1][1] + 2 || move[0][1] == move[1][1] - 2)) || ((move[0][0] == move[1][0] - 2 || move[0][0] == move[1][0] + 2) && (move[0][1] == move[1][1] + 1 || move[0][1] == move[1][1] - 1))) {
+                //if the programm comes this far, it means that the move is possible so we play it
+                serverPost(clmove)
+                backendboard[move[0][0]][move[0][1]] = 0
+                backendboard[move[1][0]][move[1][1]] = 2
+            }
+        }
+        //now we do the same for bishop
+        if (backendboard[move[0][0]][move[0][1]] == 3) {
+            if (Math.abs((move[0][0] - move[1][0])) == Math.abs((move[0][1] - move[1][1]))) {
+                serverPost(clmove)
+                backendboard[move[0][0]][move[0][1]] = 0
+                backendboard[move[1][0]][move[1][1]] = 3
+            }
+        }
+
+        //now we do the same for queen
+        if (backendboard[move[0][0]][move[0][1]] == 9) {
+            if (Math.abs((move[0][0] - move[1][0])) == Math.abs((move[0][1] - move[1][1])) || (move[0][0] == move[1][0]) || (move[0][1] == move[1][1])) {
+                serverPost(clmove)
+                backendboard[move[0][0]][move[0][1]] = 0
+                backendboard[move[1][0]][move[1][1]] = 9
+            }
+        }
+
+        //now we do the same for king
+        if (backendboard[move[0][0]][move[0][1]] == 10) {
+            if (Math.abs((move[0][0] - move[1][0])) <= 1 && Math.abs((move[0][1] - move[1][1])) <= 1) {
+                serverPost(clmove)
+                backendboard[move[0][0]][move[0][1]] = 0
+                backendboard[move[1][0]][move[1][1]] = 10
+            }
+        }
+        //now we do the same for rook
+        if (backendboard[move[0][0]][move[0][1]] == 5) {
+            if (move[0][0] == move[1][0] || move[0][1] == move[1][1]) {
+                serverPost(clmove)
+                backendboard[move[0][0]][move[0][1]] = 0
+                backendboard[move[1][0]][move[1][1]] = 5
+            }
+        }
+    }
+
+    board[2][7] = 9;
+    board[5][7] = 5;
+    board[2][0] = 10;
+
+    gmupdt();
+
+
+
+
+</script>
+
+</html>
