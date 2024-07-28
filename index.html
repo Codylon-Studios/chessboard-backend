@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<canvas id="canvas1" height="400" width="400" style="border: 2px solid black" onclick="clicked()"></canvas>
+<canvas id="canvas" height="400" width="400" style="border: 2px solid black" onclick="clicked()"></canvas>
 <script>
     //"FRONTEND"--"FRONTEND"--"FRONTEND"--"FRONTEND"--"FRONTEND"--"FRONTEND"
     //creating canvas
@@ -13,29 +13,33 @@
     //setting canvas size
     c.width = 400;
     c.height = 400;
-    //in this array has two lists, the first defines thefield where we want to move from and then the field where we want to go, if no fields are selected, its 0
+    //in this array has two lists, the first defines the field where we want to move from and then the field where we want to go, if no fields are selected, its 0
     const currentMove = [];
     //if canvas gets clicked we do the click function
     function clicked() {
         click()
     }
-    //function noting where mouse is and setting mx ans my to the mouse coordinates
     window.addEventListener('mousemove', function (e) {
         mx = e.x;
         my = e.y;
     })
-    //what happens when user clicks
+    
     function click() {
         //turns mouse coordinates into fields on board
         mx = (mx - mx % fieldsize) / fieldsize;
         my = (my - my % fieldsize) / fieldsize;
-        //if a field was clicked before then currentMove[2] is not equal to 0 and we set the clicked field as the second location in the list and submit the move
+        //currentMove list has three values in it: 1.: the first field, 2.: the second field, 3.: 0 if no field was clicked, 1 if a field was clicked
+        //if a field was clicked
+        //currentMove[2] != 0
+        //set the clicked field as the second location in the list and submit the move
         if (currentMove[2] == 0) {
             currentMove[1] = [mx, my]
             clientPost(currentMove);
             //after submitting the move we set current Move back to 0, so you can play your next move
             currentMove[2] = 1
-            //if no field was clicked before the clicked field is getting the first field and currentMove[2] is set to 1 so next click the programm sets the next click as the second field
+        //if no field was clicked before
+        //clicked field is getting the first field, currentMove[2] is set to 1
+        //next click the programm sets the next click as the second field
         } else {
             if (board[mx][my] != 0) {
                 currentMove[0] = [mx, my]
@@ -99,16 +103,21 @@
             }
         }
     }
+
+    //server to client
     function serverPost(clmove) {
-        //after getting told the legal moves by the server we play them on our local bord
+        //after getting told the legal moves by the server we play them on our local board
         board[clmove[1][0]][clmove[1][1]] = board[clmove[0][0]][clmove[0][1]]
         board[clmove[0][0]][clmove[0][1]] = 0
         gmupdt()
     }
-    //backend
+
+    //"BACKEND"--"BACKEND"--"BACKEND"--"BACKEND"--"BACKEND"--"BACKEND
     const backendboard = board
     //clmove = clientmove
     //that function detects when the frontend sends a move to the backend
+    
+    //client to server
     function clientPost(clmove) {
         const move = clmove
         //lets say the board is saved on the server from the view of white
@@ -166,6 +175,8 @@
         //now we do the same for king
         if (backendboard[move[0][0]][move[0][1]] == 10) {
             if (Math.abs((move[0][0] - move[1][0])) <= 1 && Math.abs((move[0][1] - move[1][1])) <= 1) {
+                //check if any piece is on the way
+                
                 serverPost(clmove)
                 backendboard[move[0][0]][move[0][1]] = 0
                 backendboard[move[1][0]][move[1][1]] = 10
@@ -174,6 +185,23 @@
         //now we do the same for rook
         if (backendboard[move[0][0]][move[0][1]] == 5) {
             if (move[0][0] == move[1][0] || move[0][1] == move[1][1]) {
+                //check if any piece is on the way
+                if (move[0][0] == move[1][0]) {
+                    for (let x = Math.min(move[0][1], move[1][1]) + 1; x < Math.max(move[0][1], move[1][1]); x++) {
+                        if (backendboard[move[0][0]][x] != 0) {
+                            console.log("piece in the way")
+                            return
+                        }
+                    }
+                }
+                if (move[0][1] == move[1][1]) {
+                    for (let x = Math.min(move[0][0], move[1][0]) + 1; x < Math.max(move[0][0], move[1][0]); x++) {
+                        if (backendboard[x][move[0][1]] != 0) {
+                            console.log("piece in the way")
+                            return
+                        }
+                    }
+                }
                 serverPost(clmove)
                 backendboard[move[0][0]][move[0][1]] = 0
                 backendboard[move[1][0]][move[1][1]] = 5
@@ -191,5 +219,16 @@
 
 
 </script>
+<p>
+pawns----pink <br>
+knight----green <br>
+ bishops----blue <br>
+rooks----red <br>
+
+queen----purple <br>
+
+king----yellow <br>
+
+</p>
 
 </html>
