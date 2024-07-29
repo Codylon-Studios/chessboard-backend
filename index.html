@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<canvas id="canvas" height="400" width="400" style="border: 2px solid black" onclick="clicked()"></canvas>
+<canvas id="canvas" height="800" width="800" style="border: 2px solid black" onclick="clicked()"></canvas>
 <script>
     //"FRONTEND"--"FRONTEND"--"FRONTEND"--"FRONTEND"--"FRONTEND"--"FRONTEND"
     //creating canvas
@@ -11,19 +11,22 @@
     //defines the color the player plays
     var color = "w"
     //setting canvas size
-    c.width = 400;
-    c.height = 400;
-    //in this array has two lists, the first defines the field where we want to move from and then the field where we want to go, if no fields are selected, its 0
+    c.width = 800;
+    c.height = 800;
+    //currentMove has the structure: currentMove[[mx_old, my_old], [mx_new, my_new], 0 or 1]
     const currentMove = [];
     //if canvas gets clicked we do the click function
     function clicked() {
         click()
+        console.log("hsh");
     }
     window.addEventListener('mousemove', function (e) {
         mx = e.x;
         my = e.y;
     })
-    
+
+
+
     function click() {
         //turns mouse coordinates into fields on board
         mx = (mx - mx % fieldsize) / fieldsize;
@@ -37,9 +40,9 @@
             clientPost(currentMove);
             //after submitting the move we set current Move back to 0, so you can play your next move
             currentMove[2] = 1
-        //if no field was clicked before
-        //clicked field is getting the first field, currentMove[2] is set to 1
-        //next click the programm sets the next click as the second field
+            //if no field was clicked before
+            //clicked field is getting the first field, currentMove[2] is set to 1
+            //next click the programm sets the next click as the second field
         } else {
             if (board[mx][my] != 0) {
                 currentMove[0] = [mx, my]
@@ -70,31 +73,31 @@
                 } else {
                     ctx.fillStyle = "#111111";
                 }
-                //makes pawns pink
+                //pawn color
                 if (board[x][y] == 1) {
-                    ctx.fillStyle = "#FF6666"
+                    ctx.fillStyle = "pink"
                 }
-                //makes knight green
+                //knight color
                 if (board[x][y] == 2) {
-                    ctx.fillStyle = "#22DD22"
+                    ctx.fillStyle = "green"
                 }
-                //makes bishops blue
+                //bishops color
                 if (board[x][y] == 3) {
-                    ctx.fillStyle = "#2222DD"
+                    ctx.fillStyle = "blue"
                 }
-                //makes rooks red
+                //rook color
                 if (board[x][y] == 5) {
-                    ctx.fillStyle = "#DD2222"
+                    ctx.fillStyle = "red"
                 }
 
-                //makes queen purple
+                //queen color
                 if (board[x][y] == 9) {
-                    ctx.fillStyle = "#f803fc"
+                    ctx.fillStyle = "purple"
                 }
 
-                //makes king yellow
+                //king color
                 if (board[x][y] == 10) {
-                    ctx.fillStyle = "#DDDD22"
+                    ctx.fillStyle = "yellow"
                 }
 
 
@@ -116,7 +119,7 @@
     const backendboard = board
     //clmove = clientmove (=CurrentMove)
     //that function detects when the frontend sends a move to the backend
-    
+
     //client to server
     function clientPost(clmove) {
         const move = clmove
@@ -133,92 +136,129 @@
         //now we have to check whether the move is possible
         //so first we figure out what kind of piece needs to be moved
         /*
-            move[0][0] is the coordinate of the first click
-            move[0][1] is the coordinate of the second click
+            move[0][0] is the x coordinate of the first click
+            move[0][1] is the y coordinate of the first click
+            move[1][0] is the x coordinate of the second click
+            move[1][1] is the y coordinate of the second click
         */
-       //if true that means that the clicked piece is a pawn
-        if (backendboard[move[0][0]][move[0][1]] == 1) {
+
+        switch (backendboard[move[0][0]][move[0][1]]){
+            case 1: //pawn
             //checking if two coordinates have the same x-coordinate
             if (move[0][0] == move[1][0]) {
-                //if true that means that the two selected fields have the same x-coordinate, which is essential for a legal pawn move
+                //checks if piece y coordinate was changed
+                if (move[0][1] == move [1][1]){
+                    console.log("piece can't move to same position as before")
+                    return;
+                }else
+                //this one checks how many moves to the front the pawn makes
+                //if one move is made -> move
+                //if two moves are made and pawn is on second rank -> move
                 if (move[0][1] - 1 == move[1][1] || (move[0][1] == 6 && move[0][1] - 2 == move[1][1])) {
-                    //this one checks how many moves to the front the pawn makes. if 1 or 2 in the first move it lets the move be played
                     //now we change the board data in the backend and the frontend
                     serverPost(clmove);
                     backendboard[move[0][0]][move[0][1]] = 0
                     backendboard[move[1][0]][move[1][1]] = 1
                 }
             }
-        }
-        //now we do the same for the knight
-        if (backendboard[move[0][0]][move[0][1]] == 2) {
+            break;
+
+            case 2: //knight
             if (((move[0][0] == move[1][0] - 1 || move[0][0] == move[1][0] + 1) && (move[0][1] == move[1][1] + 2 || move[0][1] == move[1][1] - 2)) || ((move[0][0] == move[1][0] - 2 || move[0][0] == move[1][0] + 2) && (move[0][1] == move[1][1] + 1 || move[0][1] == move[1][1] - 1))) {
                 //if the programm comes this far, it means that the move is possible so we play it
-                serverPost(clmove)
-                backendboard[move[0][0]][move[0][1]] = 0
-                backendboard[move[1][0]][move[1][1]] = 2
+                //check if frontend gives the same fields
+                if (move[0][0] == move[1][0] && move[0][1] == move[1][1]) {
+                    console.log("piece can't move to same position as before")
+                    return;
+                } else {
+                    serverPost(clmove)
+                    backendboard[move[0][0]][move[0][1]] = 0
+                    backendboard[move[1][0]][move[1][1]] = 2
+                }
             }
-        }
-        //now we do the same for bishop
-        if (backendboard[move[0][0]][move[0][1]] == 3) {
-            if (Math.abs((move[0][0] - move[1][0])) == Math.abs((move[0][1] - move[1][1]))) {
-                serverPost(clmove)
-                backendboard[move[0][0]][move[0][1]] = 0
-                backendboard[move[1][0]][move[1][1]] = 3
-            }
-        }
+            break;
 
-        //now we do the same for queen
-        if (backendboard[move[0][0]][move[0][1]] == 9) {
+            case 3: //bishop
+            if (backendboard[move[0][0]][move[0][1]] == 3) {
+                if (Math.abs((move[0][0] - move[1][0])) == Math.abs((move[0][1] - move[1][1]))) {
+                    if (move[0][0] == move[1][0] && move[0][1] == move[1][1]) {
+                        console.log("piece can't move to same position as before")
+                        return;
+                    } else {
+                        serverPost(clmove)
+                        backendboard[move[0][0]][move[0][1]] = 0
+                        backendboard[move[1][0]][move[1][1]] = 3
+                    }
+                }
+            }
+            break;
+
+            case 9: //queen
             if (Math.abs((move[0][0] - move[1][0])) == Math.abs((move[0][1] - move[1][1])) || (move[0][0] == move[1][0]) || (move[0][1] == move[1][1])) {
-                serverPost(clmove)
-                backendboard[move[0][0]][move[0][1]] = 0
-                backendboard[move[1][0]][move[1][1]] = 9
+                if (move[0][0] == move[1][0] && move[0][1] == move[1][1]) {
+                    console.log("piece can't move to same position as before")
+                    return;
+                } else {
+                    serverPost(clmove)
+                    backendboard[move[0][0]][move[0][1]] = 0
+                    backendboard[move[1][0]][move[1][1]] = 9
+                }
             }
-        }
+            break;
 
-        //now we do the same for king
-        if (backendboard[move[0][0]][move[0][1]] == 10) {
+            case 10: //king
             if (Math.abs((move[0][0] - move[1][0])) <= 1 && Math.abs((move[0][1] - move[1][1])) <= 1) {
-                //check if any piece is on the way
-                
-                serverPost(clmove)
-                backendboard[move[0][0]][move[0][1]] = 0
-                backendboard[move[1][0]][move[1][1]] = 10
+                if (move[0][0] == move[1][0] && move[0][1] == move[1][1]) {
+                    console.log("piece can't move to same position as before")
+                    return;
+                } else {
+                    serverPost(clmove)
+                    backendboard[move[0][0]][move[0][1]] = 0
+                    backendboard[move[1][0]][move[1][1]] = 10
+                }
             }
-        }
-        //now we do the same for rook
-        if (backendboard[move[0][0]][move[0][1]] == 5) {
-            //check if clicked fields are same (in this case we do nothing)
-            if (move[0][0] == move[1][0] || move[0][1] == move[1][1]) {
-                //check if any piece is on the way
-                if (move[0][0] == move[1][0]) {
-                    for (let x = Math.min(move[0][1], move[1][1]) + 1; x < Math.max(move[0][1], move[1][1]); x++) {
-                        if (backendboard[move[0][0]][x] != 0) {
-                            console.log("piece in the way")
-                            return
+            break;
+
+            case 5://rook
+                //check if clicked fields are same (in this case we terminate the backend process)
+            if (move[0][0] == move[1][0] && move[0][1] == move[1][1]) {
+                console.log("piece can't move to same position as before")
+                return;
+            } else {
+                //check if can acually go on the field
+                if (move[0][0] == move[1][0] || move[0][1] == move[1][1]) {
+                    //check if any piece is on the way
+                    if (move[0][0] == move[1][0]) {
+                        for (let x = Math.min(move[0][1], move[1][1]) + 1; x < Math.max(move[0][1], move[1][1]); x++) {
+                            if (backendboard[move[0][0]][x] != 0) {
+                                console.log("piece in the way")
+                                return;
+                            }
                         }
                     }
-                }
-                if (move[0][1] == move[1][1]) {
-                    for (let x = Math.min(move[0][0], move[1][0]) + 1; x < Math.max(move[0][0], move[1][0]); x++) {
-                        if (backendboard[x][move[0][1]] != 0) {
-                            console.log("piece in the way")
-                            return
+                    if (move[0][1] == move[1][1]) {
+                        for (let x = Math.min(move[0][0], move[1][0]) + 1; x < Math.max(move[0][0], move[1][0]); x++) {
+                            if (backendboard[x][move[0][1]] != 0) {
+                                console.log("piece in the way")
+                                return;
+                            }
                         }
                     }
+                    serverPost(clmove)
+                    backendboard[move[0][0]][move[0][1]] = 0
+                    backendboard[move[1][0]][move[1][1]] = 5
                 }
-                serverPost(clmove)
-                backendboard[move[0][0]][move[0][1]] = 0
-                backendboard[move[1][0]][move[1][1]] = 5
             }
+            break;
         }
     }
-    //0=nothing, 1=pawn, 2=knight, 3=bishop,5=rook, 9=queen, 10=King
-    board[2][7] = 9;
+
+
+    //1=pawn, 2=knight, 3=bishop,5=rook, 9=queen, 10=King
+    board[1][7] = 9;
     board[5][7] = 5;
-    board[2][0] = 10;
-    board[2][3] = 1;
+    board[2][6] = 10;
+    board[3][6] = 1;
     board[5][0] = 2;
     board[6][1] = 3;
 
