@@ -5,20 +5,22 @@ function serverPostToClient(clmove) {
     //after getting told the legal moves by the server we play them on our local board
     board[clmove[1][0]][clmove[1][1]] = board[clmove[0][0]][clmove[0][1]]
     board[clmove[0][0]][clmove[0][1]] = 0
+    moveCount += 1;
     gmupdt()
 }
 
 //clmove = CurrentMove
 //server calculates if move suggested by the frontend is possible
 function ServerCalc(clmove) {
-    const move = clmove
+    var move = clmove
     //lets say the board is saved on the server from the view of white
     //that means if we play black we have to "flip our move by 180"
     if (color == "b") {
         //now were basically subtracting the coordinates of the fields from 7 flipping them around the center of the board
-        for (let x = 0; a < 1; a++) {
-            for (let y = 0; y < 1; y++) {
-                move[x][y] = 7 - move[x][y]
+        for (let x = 0; x < boardsize; x++) {
+            for (let y = 0; y < boardsize; y++) {
+                console.log("x is:"+x);
+                move[x][y] =  move[x][7-y]
             }
         }
     }
