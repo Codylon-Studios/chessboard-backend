@@ -20,7 +20,7 @@ function ServerCalc(clmove) {
         for (let x = 0; x < boardsize; x++) {
             for (let y = 0; y < boardsize; y++) {
                 console.log("x is:"+x);
-                move[x][y] =  move[x][7-y]
+                board[x][y] =  board[7-x][7-y]
             }
         }
     }

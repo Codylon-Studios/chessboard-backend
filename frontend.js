@@ -4,7 +4,7 @@
     var ctx = c.getContext("2d");
     var boardsize = 8;
     //defines the color the player plays
-    var color = "w"
+    var color = "b"
     //Move count
     var moveCount = 1;
     //setting canvas size
