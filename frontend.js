@@ -1,4 +1,5 @@
 //FRONTEND--FRONTEND--FRONTEND--FRONTEND--FRONTEND--FRONTEND
+/*
 //creating canvas
 var c = document.getElementById("canvas");
 var ctx = c.getContext("2d");
@@ -104,3 +105,58 @@ board[5][0] = 2;
 board[6][1] = 3;
 
 gmupdt();
+*/
+
+//defines the color the player plays
+var color = "w"
+
+//Move count
+var moveCount = 1;
+
+//currentMove has the structure: currentMove[[mx_old, my_old], [mx_new, my_new], 0 or 1]
+//0 is old and new coordinates are submitted
+//1 is coordinates still pending
+const currentMove = [];
+
+//array where fields are listed [x][y],0=nothing, 1=pawn, 2=knight, 3=bishop,5=rook, 9=queen, 10=King
+const board = [];
+//generating an empty chessboard
+for (let x = 0; x < boardsize; x++) {
+    const xy = []
+    for (let y = 0; y < boardsize; y++) {
+        xy[y] = 0;
+    }
+    board[x] = xy
+}
+
+// Create an 8x8 chessboard
+function createChessboard() {
+  const chessboard = document.getElementById('chessboard');
+  
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const square = document.createElement('div');
+      square.classList.add('square');
+      
+      // Alternating black and white squares
+      if ((row + col) % 2 === 0) {
+        square.classList.add('white');
+      } else {
+        square.classList.add('black');
+      }
+
+      // Add click event listener to each square
+      square.addEventListener('click', () => onSquareClick(row, col));
+
+      // Append square to chessboard
+      chessboard.appendChild(square);
+    }
+  }
+}
+
+// Handle square click
+function onSquareClick(row, col) {
+  console.log(`Clicked square at row ${row}, column ${col}`);
+}
+
+createChessboard();

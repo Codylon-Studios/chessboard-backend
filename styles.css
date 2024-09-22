@@ -1,0 +1,32 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+  }
+  
+  .chessboard {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);  /* 8 columns, responsive */
+    grid-template-rows: repeat(8, 1fr);     /* 8 rows, responsive */
+    width: 90vmin;   /* Sets the chessboard size to a responsive 90% of the viewport's minimum dimension */
+    height: 90vmin;
+    border: 2px solid black;
+  }
+  
+  .square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: calc(2vmin);  /* Responsive text size */
+  }
+  
+  .white {
+    background-color: #f0d9b5;
+  }
+  
+  .black {
+    background-color: #b58863;
+  }

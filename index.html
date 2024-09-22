@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
             chessboard-backend
         </title>
+        <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-<canvas id="canvas" height="800" width="800" style="border: 2px solid black" onclick="clicked()"></canvas>
+        <div class="chessboard" id="chessboard"></div>
+<!-- <canvas id="canvas" height="800" width="800" style="border: 2px solid black" onclick="clicked()"></canvas> -->
 <script src="backend.js"></script>
 <script src="frontend.js"></script>
 <script src="setBlack.js"></script>
 <script src="setWhite.js"></script>
+<!--
 <script>
     //if canvas gets clicked we do the click function
     function clicked() {
@@ -21,7 +26,8 @@
         mx = e.x;
         my = e.y;
     })
-</script>
+</script> 
+
 
 <p style="color:red">rook----red</p>
 <p style="color:pink">pawn----pink</p>
@@ -29,6 +35,7 @@
 <p style="color:blue">bishop----blue</p>
 <p style="color:yellow">king----yellow</p>
 <p style="color:purple">queen----purple</p>
+-->
 </body>
 
 </html>
