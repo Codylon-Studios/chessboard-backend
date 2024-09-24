@@ -7,7 +7,12 @@
     move[1][1] is the y coordinate of the second click = finaly
 */
 
-function WhitePiecesCalculationMoves(initialx, initialy, finalx, finaly, backendboard, clmove) {
+function WhitePiecesCalculationMoves(clientmove, backendboard) {
+    console.log(clientmove[0][0]);
+    initialx = clientmove[0][0];
+    initialy = clientmove[0][1];
+    finalx = clientmove[1][0];
+    finaly = clientmove[1][1];
     switch (backendboard[initialx][initialy]) {
         case 1: //pawn
             //checking if two coordinates have the same x-coordinate
@@ -22,7 +27,7 @@ function WhitePiecesCalculationMoves(initialx, initialy, finalx, finaly, backend
                     //if two moves are made and pawn is on second rank -> move
                     if (initialy - 1 == finaly || (initialy == 6 && initialy - 2 == finaly)) {
                         //now we change the board data in the backend and the frontend
-                        serverPostToClient(clmove);
+                        serverPostToClient(clientmove);
                         backendboard[initialx][initialy] = 0
                         backendboard[finalx][finaly] = 1
                     }
@@ -37,7 +42,7 @@ function WhitePiecesCalculationMoves(initialx, initialy, finalx, finaly, backend
                     console.log("piece can't move to same position as before");
                     return;
                 } else {
-                    serverPostToClient(clmove);
+                    serverPostToClient(clientmove);
                     backendboard[initialx][initialy] = 0;
                     backendboard[finalx][finaly] = 2;
                 }
@@ -50,7 +55,7 @@ function WhitePiecesCalculationMoves(initialx, initialy, finalx, finaly, backend
                     console.log("piece can't move to same position as before")
                     return;
                 } else {
-                    serverPostToClient(clmove)
+                    serverPostToClient(clientmove)
                     backendboard[initialx][initialy] = 0;
                     backendboard[finalx][finaly] = 3;
                 }
@@ -63,7 +68,7 @@ function WhitePiecesCalculationMoves(initialx, initialy, finalx, finaly, backend
                     console.log("piece can't move to same position as before")
                     return;
                 } else {
-                    serverPostToClient(clmove)
+                    serverPostToClient(clientmove)
                     backendboard[initialx][initialy] = 0;
                     backendboard[finalx][finaly] = 9;
                 }
@@ -76,7 +81,7 @@ function WhitePiecesCalculationMoves(initialx, initialy, finalx, finaly, backend
                     console.log("piece can't move to same position as before")
                     return;
                 } else {
-                    serverPostToClient(clmove)
+                    serverPostToClient(clientmove)
                     backendboard[initialx][initialy] = 0;
                     backendboard[finalx][finaly] = 9;
                 }
@@ -108,7 +113,7 @@ function WhitePiecesCalculationMoves(initialx, initialy, finalx, finaly, backend
                             }
                         }
                     }
-                    serverPostToClient(clmove);
+                    serverPostToClient(clientmove);
                     backendboard[initialx][initialy] = 0;
                     backendboard[finalx][finaly] = 5;
                 }
