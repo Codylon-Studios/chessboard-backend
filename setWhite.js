@@ -40,11 +40,10 @@ function WhitePiecesCalculationMoves(clientmove, backendboard) {
                 //check if piece moves to the same position as before
                 if (initialx == finalx && initialy == finaly) {
                     console.log("piece can't move to same position as before");
-                    return;
+                    return 1;
                 } else {
                     serverPostToClient(clientmove);
-                    backendboard[initialx][initialy] = 0;
-                    backendboard[finalx][finaly] = 2;
+                    return 0;
                 }
             }
             break;
@@ -119,6 +118,9 @@ function WhitePiecesCalculationMoves(clientmove, backendboard) {
                 }
             }
             break;
+
+            default:
+                console.log("invalid move");
     }
 
 }

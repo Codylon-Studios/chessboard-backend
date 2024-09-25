@@ -9,6 +9,7 @@
 
 function BlackPiecesCalculationMoves(clientmove, backendboard) {
     console.log(clientmove[0][0]);
+    initialx = clientmove[0][0];
     initialy = clientmove[0][1];
     finalx = clientmove[1][0];
     finaly = clientmove[1][1];
@@ -39,11 +40,10 @@ function BlackPiecesCalculationMoves(clientmove, backendboard) {
                 //check if piece moves to the same position as before
                 if (initialx == finalx && initialy == finaly) {
                     console.log("piece can't move to same position as before");
-                    return;
+                    return 1;
                 } else {
                     serverPostToClient(clientmove);
-                    backendboard[initialx][initialy] = 0;
-                    backendboard[finalx][finaly] = 2;
+                    return 0;
                 }
             }
             break;

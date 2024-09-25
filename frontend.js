@@ -13,19 +13,38 @@ var moveCount = 1;
 // 1 means coordinates are still pending
 let currentMove = [];
 
-// Create an 8x8 chessboard
 function createChessboard() {
   const chessboard = document.getElementById('chessboard');
+  
+  const initialBoard = [
+    [5, 2, 3, 9, 10, 3, 2, 5], 
+    [1, 1, 1, 1, 1, 1, 1, 1],  
+    [0, 0, 0, 0, 0, 0, 0, 0], 
+    [0, 0, 0, 0, 0, 0, 0, 0],  
+    [0, 0, 0, 0, 0, 0, 0, 0],  
+    [0, 0, 0, 0, 0, 0, 0, 0],  
+    [1, 1, 1, 1, 1, 1, 1, 1],   
+    [5, 2, 3, 9, 10, 3, 2, 5],  
+  ];
   
   for (let row = 0; row < boardsize; row++) {
     for (let col = 0; col < boardsize; col++) {
       const square = document.createElement('div');
       square.classList.add('square');
-      
+      square.id = `square-${row}-${col}`;
+
       if ((row + col) % 2 === 0) {
         square.classList.add('white');
       } else {
         square.classList.add('black');
+      }
+
+      const piece = initialBoard[row][col];
+      if (piece !== 0) {
+        const img = document.createElement('img');
+        img.src = getPieceImage(piece, row < 2 ? 'b' : 'w');
+        img.classList.add('chess-piece');
+        square.appendChild(img);
       }
 
       square.addEventListener('click', () => onSquareClick(row, col));
@@ -35,11 +54,24 @@ function createChessboard() {
   }
 }
 
+
+function getPieceImage(piece, color) {
+  switch (piece) {
+    case 1: return `/images/pieces/pawn_${color}.png`;
+    case 2: return `/images/pieces/knight_${color}.png`;
+    case 3: return `/images/pieces/bishop_${color}.png`;
+    case 5: return `/images/pieces/rook_${color}.png`;
+    case 9: return `/images/pieces/queen_${color}.png`;
+    case 10: return `/images/pieces/king_${color}.png`;
+    default: return '';
+  }
+}
+
+
 // Handle square click
 function onSquareClick(row, col) {
   console.log("Color: "+ color);
   console.log("Current Move:"+ moveCount);
-  console.log(`Clicked square at row ${row}, column ${col}`);
   
   if (currentMove.length === 0) {
     // If no move started, store initial click as the starting point
