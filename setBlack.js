@@ -1,5 +1,3 @@
-
-
 /*
     move[0][0] is the x coordinate of the first click = initialx
     move[0][1] is the y coordinate of the first click = initialy

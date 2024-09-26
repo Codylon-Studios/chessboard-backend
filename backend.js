@@ -1,6 +1,6 @@
 //BACKEND--BACKEND--BACKEND--BACKEND--BACKEND--BACKEND
 
-// Array where pieces are listed by their position [x][y], 0=nothing, 1=pawn, 2=knight, 3=bishop, 5=rook, 9=queen, 10=king
+// Array where pieces are listed by their position [x][y], 0=nothing, +-1=pawn, +-2=knight, +-3=bishop, +-5=rook, +-9=queen, +-10=king
 const board = [
     [-5, -2, -3, -9, -10, -3, -2, -5],
     [-1, -1, -1, -1, -1, -1, -1, -1],
@@ -17,6 +17,11 @@ function serverPostToClient(clientmove) {
     const fromSquare = document.getElementById(`square-${clientmove[0][0]}-${clientmove[0][1]}`);
     const toSquare = document.getElementById(`square-${clientmove[1][0]}-${clientmove[1][1]}`);
 
+    // Remove any piece currently on the destination square
+    while (toSquare.firstChild) {
+        toSquare.removeChild(toSquare.firstChild);
+    }
+
     const pieceImage = fromSquare.querySelector('img');
     if (pieceImage) {
         fromSquare.removeChild(pieceImage); // Remove from the original square
@@ -25,7 +30,6 @@ function serverPostToClient(clientmove) {
 
     moveCount += 1;
 }
-
 
 
 //clientmove = CurrentMove

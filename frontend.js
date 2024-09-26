@@ -2,15 +2,13 @@
 
 const boardsize = 8;
 
-// Defines the color the player plays
+// defines the color that should move
 var color = "w";
 
-// Move count
+// move count
 var moveCount = 1;
 
-// currentMove has the structure: currentMove[[mx_old, my_old], [mx_new, my_new], 0 or 1]
-// 0 means old and new coordinates are submitted
-// 1 means coordinates are still pending
+// currentMove has the structure: currentMove[[row_old, col_old], [row_new, col_new]]
 let currentMove = [];
 
 function createChessboard() {
