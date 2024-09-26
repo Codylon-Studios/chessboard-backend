@@ -17,8 +17,8 @@ function createChessboard() {
   const chessboard = document.getElementById('chessboard');
   
   const initialBoard = [
-    [5, 2, 3, 9, 10, 3, 2, 5], 
-    [1, 1, 1, 1, 1, 1, 1, 1],  
+    [-5, -2, -3, -9, -10, -3, -2, -5], 
+    [-1, -1, -1, -1, -1, -1, -1, -1],  
     [0, 0, 0, 0, 0, 0, 0, 0], 
     [0, 0, 0, 0, 0, 0, 0, 0],  
     [0, 0, 0, 0, 0, 0, 0, 0],  
@@ -42,7 +42,7 @@ function createChessboard() {
       const piece = initialBoard[row][col];
       if (piece !== 0) {
         const img = document.createElement('img');
-        img.src = getPieceImage(piece, row < 2 ? 'b' : 'w');
+        img.src = getPieceImage(piece);
         img.classList.add('chess-piece');
         square.appendChild(img);
       }
@@ -55,14 +55,20 @@ function createChessboard() {
 }
 
 
-function getPieceImage(piece, color) {
+function getPieceImage(piece) {
   switch (piece) {
-    case 1: return `/images/pieces/pawn_${color}.png`;
-    case 2: return `/images/pieces/knight_${color}.png`;
-    case 3: return `/images/pieces/bishop_${color}.png`;
-    case 5: return `/images/pieces/rook_${color}.png`;
-    case 9: return `/images/pieces/queen_${color}.png`;
-    case 10: return `/images/pieces/king_${color}.png`;
+    case 1: return `/images/pieces/pawn_w.png`;
+    case 2: return `/images/pieces/knight_w.png`;
+    case 3: return `/images/pieces/bishop_w.png`;
+    case 5: return `/images/pieces/rook_w.png`;
+    case 9: return `/images/pieces/queen_w.png`;
+    case 10: return `/images/pieces/king_w.png`;
+    case -1: return `/images/pieces/pawn_b.png`;
+    case -2: return `/images/pieces/knight_b.png`;
+    case -3: return `/images/pieces/bishop_b.png`;
+    case -5: return `/images/pieces/rook_b.png`;
+    case -9: return `/images/pieces/queen_b.png`;
+    case -10: return `/images/pieces/king_b.png`;
     default: return '';
   }
 }
