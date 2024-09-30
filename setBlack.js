@@ -1,8 +1,8 @@
 /*
-    move[0][0] is the x coordinate of the first click = initialx
-    move[0][1] is the y coordinate of the first click = initialy
-    move[1][0] is the x coordinate of the second click = finalx
-    move[1][1] is the y coordinate of the second click = finaly
+    move[0][0] is the x coordinate of the first click = initialx (colum in backendboard)
+    move[0][1] is the y coordinate of the first click = initialy (row in backendboard)
+    move[1][0] is the x coordinate of the second click = finalx (colum in backendboard)
+    move[1][1] is the y coordinate of the second click = finaly (row in backendboard)
 */
 //return = 0: all ok
 //return = 1: piece goes on same field as before
@@ -11,10 +11,10 @@
 
 function BlackPiecesCalculationMoves(clientmove, backendboard) {
     console.log(clientmove[0][0]);
-    initialy = clientmove[0][0];
-    initialx = clientmove[0][1];
-    finaly = clientmove[1][0];
-    finalx = clientmove[1][1];
+    initialx = clientmove[0][0];
+    initialy = clientmove[0][1];
+    finalx = clientmove[1][0];
+    finaly = clientmove[1][1];
     switch (backendboard[initialy][initialx]) {
         case -1: //pawn
             //checking if two coordinates have the same x-coordinate
@@ -28,7 +28,7 @@ function BlackPiecesCalculationMoves(clientmove, backendboard) {
                     //if one move is made -> move
                     //if two moves are made and pawn is on second rank -> move
                     if (initialy + 1 == finaly || (initialy == 1 && initialy + 2 == finaly)) {
-                        if (backendboard[finaly][initialx] < 0){
+                        if (backendboard[finaly][finalx] < 0){
                             console.log("piece cant capture/go on the field of their pieces");
                             return 3;
                         } else {
@@ -43,13 +43,12 @@ function BlackPiecesCalculationMoves(clientmove, backendboard) {
 
         case -2: //knight
             if (((initialx == finalx - 1 || initialx == finalx + 1) && (initialy == finaly + 2 || initialy == finaly - 2)) || ((initialx == finalx - 2 || initialx == finalx + 2) && (initialy == finaly + 1 || initialy == finaly - 1))) {
-                //if the programm comes this far, it means that the move is possible so we play it
                 //check if piece moves to the same position as before
                 if (initialx == finalx && initialy == finaly) {
                     console.log("piece can't move to same position as before");
                     return 1;
                 } else {
-                    if (backendboard[finaly][initialx] < 0){
+                    if (backendboard[finaly][finalx] < 0){
                         console.log("piece cant capture/go on the field of their pieces");
                         return 3;
                     } else {
@@ -67,7 +66,7 @@ function BlackPiecesCalculationMoves(clientmove, backendboard) {
                     console.log("piece can't move to same position as before")
                     return 1;
                 } else {
-                    if (backendboard[finaly][initialx] < 0){
+                    if (backendboard[finaly][finalx] < 0){
                         console.log("piece cant capture/go on the field of their pieces");
                         return 3;
                     } else {
@@ -85,7 +84,7 @@ function BlackPiecesCalculationMoves(clientmove, backendboard) {
                     console.log("piece can't move to same position as before")
                     return 1;
                 } else {
-                    if (backendboard[finaly][initialx] < 0){
+                    if (backendboard[finaly][finalx] < 0){
                         console.log("piece cant capture/go on the field of their pieces");
                         return 3;
                     } else {
@@ -103,7 +102,7 @@ function BlackPiecesCalculationMoves(clientmove, backendboard) {
                     console.log("piece can't move to same position as before")
                     return 1;
                 } else {
-                    if (backendboard[finaly][initialx] < 0){
+                    if (backendboard[finaly][finalx] < 0){
                         console.log("piece cant capture/go on the field of their pieces");
                         return 3;
                     } else {
@@ -116,31 +115,14 @@ function BlackPiecesCalculationMoves(clientmove, backendboard) {
             break;
 
         case -5://rook
-            //check if clicked fields are same (in this case we terminate the backend process)
+            //check if clicked fields are same
             if (initialx == finalx && initialy == finaly) {
                 console.log("piece can't move to same position as before");
                 return 1;
             } else {
                 //check if can acually go on the field
                 if (initialx == finalx || initialy == finaly) {
-                    //check if any piece is on the way
-                    if (initialx == finalx) {
-                        for (let x = Math.min(initialy, finaly) + 1; x < Math.max(initialy, finaly); x++) {
-                            if (backendboard[initialx][x] != 0) {
-                                console.log("piece in the way");
-                                return 2;
-                            }
-                        }
-                    }
-                    if (initialy == finaly) {
-                        for (let x = Math.min(initialx, finalx) + 1; x < Math.max(initialx, finalx); x++) {
-                            if (backendboard[x][initialy] != 0) {
-                                console.log("piece in the way");
-                                return 2;
-                            }
-                        }
-                    }
-                    if (backendboard[finaly][initialx] < 0){
+                    if (backendboard[finaly][finalx] < 0){
                         console.log("piece cant capture/go on the field of their pieces");
                         return 3;
                     } else {

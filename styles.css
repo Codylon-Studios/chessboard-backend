@@ -9,9 +9,9 @@ body {
   
   .chessboard {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);  /* 8 columns, responsive */
-    grid-template-rows: repeat(8, 1fr);     /* 8 rows, responsive */
-    width: 90vmin;   /* Sets the chessboard size to a responsive 90% of the viewport's minimum dimension */
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);  
+    width: 90vmin;   
     height: 90vmin;
     border: 2px solid black;
   }
@@ -21,7 +21,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: calc(2vmin);  /* Responsive text size */
+    font-size: calc(2vmin); 
   }
   
   .white {
@@ -35,6 +35,6 @@ body {
   .chess-piece {
     width: 100%;
     height: 100%;
-    object-fit: contain;  /* Ensures that the aspect ratio of the pieces is maintained */
+    object-fit: contain; 
   }
   

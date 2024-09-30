@@ -40,8 +40,8 @@ function ServerCalc(clientmove) {
         var result = WhitePiecesCalculationMoves(clientmove, board);
         //0 means the move succeded
         if (result == 0) {
-            board[clientmove[1][0]][clientmove[1][1]] = board[clientmove[0][0]][clientmove[0][1]]
-            board[clientmove[0][0]][clientmove[0][1]] = 0
+            board[clientmove[1][1]][clientmove[1][0]] = board[clientmove[0][1]][clientmove[0][0]];
+            board[clientmove[0][1]][clientmove[0][0]] = 0;
             color = "b";
             console.log("hey it worked");
         } else {
@@ -52,8 +52,8 @@ function ServerCalc(clientmove) {
         var result = BlackPiecesCalculationMoves(clientmove, board);
         if (result == 0) {
         //0 means the move succcessdd
-            board[clientmove[1][0]][clientmove[1][1]] = board[clientmove[0][0]][clientmove[0][1]]
-            board[clientmove[0][0]][clientmove[0][1]] = 0
+            board[clientmove[1][1]][clientmove[1][0]] = board[clientmove[0][1]][clientmove[0][0]];
+            board[clientmove[0][1]][clientmove[0][0]] = 0;
             color = "w";
             console.log("hey it worked");
         } else {

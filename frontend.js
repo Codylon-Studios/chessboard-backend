@@ -29,7 +29,7 @@ function createChessboard() {
     for (let col = 0; col < boardsize; col++) {
       const square = document.createElement('div');
       square.classList.add('square');
-      square.id = `square-${row}-${col}`;
+      square.id = `square-${col}-${row}`;
 
       if ((row + col) % 2 === 0) {
         square.classList.add('white');
@@ -79,11 +79,11 @@ function onSquareClick(row, col) {
   
   if (currentMove.length === 0) {
     // If no move started, store initial click as the starting point
-    currentMove[0] = [row, col];
-    console.log("Start of move at:", currentMove[0][0], currentMove[0][1]);
+    currentMove[0] = [col, row];
+    console.log("Start of move at: row, col", currentMove[0][0], currentMove[0][1]);
   } else if (currentMove.length === 1) {
     // If first coordinate already stored, store the second click
-    currentMove[1] = [row, col];
+    currentMove[1] = [col, row];
     console.log("End of move at:", currentMove[1][0], currentMove[1][1]);
     ServerCalc(currentMove);
     //Reset currentMove for the next move
